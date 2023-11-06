@@ -1,7 +1,6 @@
 package school.site.api.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
