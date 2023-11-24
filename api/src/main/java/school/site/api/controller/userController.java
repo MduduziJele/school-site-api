@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import school.site.api.model.ERole;
+import school.site.api.model.EmailDetails;
 import school.site.api.model.Role;
 import school.site.api.model.User;
 import school.site.api.payload.response.MessageResponse;
@@ -29,6 +30,9 @@ public class userController {
 
     @Autowired
     UserRepository userRepository;
+
+//    @Autowired
+//    EmailService emailService;
 
     @Autowired
     RoleRepository roleRepository;
@@ -96,9 +100,9 @@ public class userController {
 
         User user = new User(first_name, last_name,email, encoder.encode(password), mobile_number, filePath);
         user.setRoles(userRoles);
+
         // Create new user's account
         userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully"));
+        return ResponseEntity.ok(new MessageResponse(""));
     }
 }
