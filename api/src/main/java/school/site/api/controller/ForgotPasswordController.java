@@ -36,7 +36,7 @@ public class ForgotPasswordController {
     JwtUtils jwtUtils;
 
     @PostMapping("/reset")
-    public ResponseEntity resetPassword(@RequestBody String password, HttpServletRequest httpServletRequest){
+    public ResponseEntity resetPassword(@RequestParam("password") String password, HttpServletRequest httpServletRequest){
         String token = jwtUtils.getJwtFromAuthorizationHeader(httpServletRequest);
         Boolean isValid = jwtUtils.validateJwtToken(token);
 
@@ -69,7 +69,7 @@ public class ForgotPasswordController {
 
                     try {
                         SimpleMailMessage mailMessage = new SimpleMailMessage();
-                        mailMessage.setFrom("my-email@gmail.com");
+                        mailMessage.setFrom("jelemduduzisa@gmail.com");
                         mailMessage.setTo(user.getEmail());
                         mailMessage.setSubject("Please Complete Registration !!!");
                         mailMessage.setText("To confirm your account registration, please click the link below :"+"\n"+ resetLink);
