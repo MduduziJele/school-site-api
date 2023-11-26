@@ -69,7 +69,7 @@ public class ForgotPasswordController {
 
                     try {
                         SimpleMailMessage mailMessage = new SimpleMailMessage();
-                        mailMessage.setFrom("jelemduduzisa@gmail.com");
+                        mailMessage.setFrom("your_email");
                         mailMessage.setTo(user.getEmail());
                         mailMessage.setSubject("Please Complete Registration !!!");
                         mailMessage.setText("To confirm your account registration, please click the link below :"+"\n"+ resetLink);

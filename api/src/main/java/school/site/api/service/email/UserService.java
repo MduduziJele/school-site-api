@@ -49,34 +49,7 @@ public class UserService {
         }
 
         Set<String> strRoles = roles;
-        Set<Role> userRoles = new HashSet<>();
-
-        if(strRoles == null){
-            Role userRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            userRoles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role){
-                    case "ADMIN":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
-                        userRoles.add(adminRole);
-
-                        break;
-                    case "CONTENT_CREATOR":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        userRoles.add(modRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
-                        userRoles.add(userRole);
-                }
-            });
-        }
+        Set<Role> userRoles = assignRoles(roles);
 
         String filePath;
 
@@ -102,5 +75,36 @@ public class UserService {
         }
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("A user has been successfully added"));
+    }
+
+    private Set<Role> assignRoles(Set<String> strRoles){
+        Set<Role> userRoles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            userRoles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "ADMIN":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        userRoles.add(adminRole);
+                        break;
+                    case "CONTENT_CREATOR":
+                        Role modRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        userRoles.add(modRole);
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_CONTENT_CREATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found"));
+                        userRoles.add(userRole);
+                }
+            });
+        }
+
+        return userRoles;
     }
 }
