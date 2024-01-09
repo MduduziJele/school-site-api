@@ -91,7 +91,10 @@ public class AboutController {
         String imageName = about.getImageUrlMission();
         byte[] image = new byte[0];
         try {
-            image = Files.readAllBytes(Paths.get(uploadDirectory+imageName));
+            File file = new File(uploadDirectory + imageName);
+            if(file.exists()){
+                image = Files.readAllBytes(Paths.get(uploadDirectory+imageName));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,7 +108,10 @@ public class AboutController {
         String imageName = about.getImageUrlVision();
         byte[] image = new byte[0];
         try {
-            image = Files.readAllBytes(Paths.get(uploadDirectory+imageName));
+            File file = new File(uploadDirectory + imageName);
+            if(file.exists()){
+                image = Files.readAllBytes(Paths.get(uploadDirectory+imageName));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
