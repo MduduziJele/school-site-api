@@ -13,7 +13,7 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://school-site-api-production.up.railway.app"));
+        configuration.setAllowedOrigins(Arrays.asList("https://singular-horse-4220e4.netlify.app"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "UPDATE", "PUT"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cookie"));
         configuration.setAllowCredentials(true);
