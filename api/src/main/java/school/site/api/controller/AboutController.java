@@ -81,7 +81,7 @@ public class AboutController {
 //        }
 //        aboutRepository.save(myAbout);
 
-        String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/about/";
         Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
         Files.write(imagePath, file.getBytes());
         System.out.println("test completed");
