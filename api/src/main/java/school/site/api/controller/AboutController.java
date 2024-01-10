@@ -66,7 +66,7 @@ public class AboutController {
     @PostMapping("/add/about/image")
     public ResponseEntity<?> addImage(@RequestPart("image") MultipartFile file, @RequestParam("option") String option)
             throws java.io.IOException {
-                System.out.println(option);
+
         String uploadDirectory = System.getProperty("user.dir") + File.separator
                 + "api/src/main/resources/static/about/";
         Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
