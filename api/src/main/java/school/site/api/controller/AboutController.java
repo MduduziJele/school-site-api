@@ -67,32 +67,26 @@ public class AboutController {
     public ResponseEntity<?> addImage(@RequestPart("image") MultipartFile file, @RequestParam("option") String option)
             throws java.io.IOException {
 
-//        String uploadDirectory = System.getProperty("user.dir") + File.separator
-//                + "api/src/main/resources/static/about/";
-//        Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
-//        Files.write(imagePath, file.getBytes());
-//
-//        About myAbout = aboutRepository.findByAboutId(1);
-//
-//        if(option.equals("vision")){
-//            myAbout.setImageUrlVision(file.getOriginalFilename());
-//        } else {
-//            myAbout.setImageUrlMission(file.getOriginalFilename());
-//        }
-//        aboutRepository.save(myAbout);
-
-        System.out.println(file.getOriginalFilename());
-        String uploadDirectory = System.getProperty("user.dir") + File.separator + "src/main/resources/static/about/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator
+                + "src/main/resources/static/about/";
         Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
         Files.write(imagePath, file.getBytes());
-        System.out.println("test completed");
+
+        About myAbout = aboutRepository.findByAboutId(1);
+
+        if(option.equals("vision")){
+            myAbout.setImageUrlVision(file.getOriginalFilename());
+        } else {
+            myAbout.setImageUrlMission(file.getOriginalFilename());
+        }
+        aboutRepository.save(myAbout);
 
         return ResponseEntity.ok().body(new MessageResponse("Done"));
     }
 
      @GetMapping("/image/mission/{id}")
     public ResponseEntity<byte[]> getMissionImage(@PathVariable("id") Integer id) throws java.io.IOException {
-        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "api/src/main/resources/static/about/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "src/main/resources/static/about/";
         About about = aboutRepository.findByAboutId(id);
         String imageName = about.getImageUrlMission();
         byte[] image = new byte[0];
@@ -109,7 +103,7 @@ public class AboutController {
 
     @GetMapping("/image/vision/{id}")
     public ResponseEntity<byte[]> getVisionImage(@PathVariable("id") Integer id) throws java.io.IOException {
-        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "api/src/main/resources/static/about/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "src/main/resources/static/about/";
         About about = aboutRepository.findByAboutId(id);
         String imageName = about.getImageUrlVision();
         byte[] image = new byte[0];
