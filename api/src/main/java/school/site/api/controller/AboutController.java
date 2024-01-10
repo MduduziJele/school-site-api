@@ -80,6 +80,10 @@ public class AboutController {
 //            myAbout.setImageUrlMission(file.getOriginalFilename());
 //        }
 //        aboutRepository.save(myAbout);
+
+        String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/";
+        Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
+        Files.write(imagePath, file.getBytes());
         System.out.println("test completed");
 
         return ResponseEntity.ok().body(new MessageResponse("Done"));
