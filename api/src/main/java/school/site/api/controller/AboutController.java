@@ -67,19 +67,20 @@ public class AboutController {
     public ResponseEntity<?> addImage(@RequestPart("image") MultipartFile file, @RequestParam("option") String option)
             throws java.io.IOException {
 
-        String uploadDirectory = System.getProperty("user.dir") + File.separator
-                + "api/src/main/resources/static/about/";
-        Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
-        Files.write(imagePath, file.getBytes());
-
-        About myAbout = aboutRepository.findByAboutId(1);
-
-        if(option.equals("vision")){
-            myAbout.setImageUrlVision(file.getOriginalFilename());
-        } else {
-            myAbout.setImageUrlMission(file.getOriginalFilename());
-        }
-        aboutRepository.save(myAbout);
+//        String uploadDirectory = System.getProperty("user.dir") + File.separator
+//                + "api/src/main/resources/static/about/";
+//        Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
+//        Files.write(imagePath, file.getBytes());
+//
+//        About myAbout = aboutRepository.findByAboutId(1);
+//
+//        if(option.equals("vision")){
+//            myAbout.setImageUrlVision(file.getOriginalFilename());
+//        } else {
+//            myAbout.setImageUrlMission(file.getOriginalFilename());
+//        }
+//        aboutRepository.save(myAbout);
+        System.out.println("test completed");
 
         return ResponseEntity.ok().body(new MessageResponse("Done"));
     }
