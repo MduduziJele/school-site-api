@@ -1,6 +1,7 @@
 package school.site.api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 import java.util.List;
@@ -15,8 +16,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.SEQUENCE,
             generator = "postSequence")
     private Integer postId;
+    @Column(length = 9564)
     private String postTitle;
-
+    @Column(length = 999999999)
     private String postContent;
     private String postImage;
     private Date createAt;
