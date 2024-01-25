@@ -5,6 +5,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import school.site.api.model.Post;
@@ -70,6 +71,7 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @CrossOrigin(origins = "http://localhost:5173")
     public ResponseEntity<?> deletePost(@PathVariable Integer id,Principal principal) {
         String email = principal.getName();

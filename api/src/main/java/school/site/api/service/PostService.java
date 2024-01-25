@@ -117,8 +117,11 @@ public class PostService {
     public void deletePost(Integer postId,String email) {
         User user1 = userService.findByEmail(email);
 
-        User user = userRepository.findById(user1.getId()).orElseThrow(() -> new
-                RuntimeException("User with Id [%s] has no right to delete post doesn't belong to you"));
+        userRepository.findById(user1.getId())
+                .filter(users -> users.getId() == user1.getId())
+                .orElseThrow(() -> new RuntimeException(
+                        "user with the id [%s] is not the own of this post".formatted(user1.getId())
+                ));
         Post post = postRepository.findById(postId).orElseThrow(() -> new
                 RuntimeException("Post with id [%s] doesn't exist".formatted(postId)));
 
