@@ -2,6 +2,7 @@ package school.site.api.service.email;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -47,42 +48,45 @@ public class UserService {
 
     public ResponseEntity<MessageResponse> addUser(MultipartFile file, String first_name, String last_name, String email, String mobile_number, Set<String> roles, String password) throws IOException {
         String fileName = sanitizeFileName(file.getOriginalFilename());
+        String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/users/profiles/";
+        Path imagePath = Paths.get(uploadDirectory, fileName);
+
         if(userRepository.existsByEmail(email)){
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use"));
         }
 
-        if(!file.isEmpty()){
-            String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/users/profiles/";
-            Path imagePath = Paths.get(uploadDirectory, fileName);
-            Files.write(imagePath, file.getBytes());
-        }
-
-        Set<String> strRoles = roles;
-        Set<Role> userRoles = assignRoles(roles);
-        String filePath;
-
-        if(file.getOriginalFilename() != "" || file.getOriginalFilename() != null) {
-            filePath ="/" + fileName;
-        } else {
-            filePath = "/";
-        }
-
-        User user = new User(first_name, last_name,email, encoder.encode(password), mobile_number, filePath);
-        user.setRoles(userRoles);
-
-        // Create new user's account
         try {
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            mailMessage.setFrom("jelemduduzisa@gmail.com");
-            mailMessage.setTo(user.getEmail());
-            mailMessage.setSubject("Registration !!!");
-            mailMessage.setText("You have been registered on the school site system. Your password is :" + password);
-            emailSenderService.sendEmail(mailMessage);
-        } catch (Exception e){
-            System.out.println(e.getMessage());
+            if(!file.isEmpty()){
+                Files.write(imagePath, file.getBytes());
+            }
+
+            String filePath = fileName.isEmpty() ? "/default.png" : ("/" + fileName);
+
+            User user = new User(first_name, last_name,email, encoder.encode(password), mobile_number, filePath);
+            Set<Role> userRoles = assignRoles(roles);
+            user.setRoles(userRoles);
+
+            // Create new user's account
+            try {
+                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                mailMessage.setFrom("jelemduduzisa@gmail.com");
+                mailMessage.setTo(user.getEmail());
+                mailMessage.setSubject("Registration !!!");
+                mailMessage.setText("You have been registered on the school site system. Your password is :" + password);
+                emailSenderService.sendEmail(mailMessage);
+            } catch (Exception e){
+                LOGGER.error("Failed to send registration email to {}: {}", email, e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Failed to send registration email"));
+            }
+            userRepository.save(user);
+            return ResponseEntity.ok(new MessageResponse("A user has been successfully added"));
+        } catch (IOException e){
+            LOGGER.error("Error occurred while processing user registration: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Failed to process user registration"));
+        } catch (Exception e) {
+            LOGGER.error("Failed to send registration email to {}: {}");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Failed to send registration email"));
         }
-        userRepository.save(user);
-        return ResponseEntity.ok(new MessageResponse("A user has been successfully added"));
     }
     private Set<Role> assignRoles(Set<String> strRoles){
         Set<Role> userRoles = new HashSet<>();
