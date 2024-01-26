@@ -68,7 +68,7 @@ public class AboutController {
             throws java.io.IOException {
 
         String uploadDirectory = System.getProperty("user.dir") + File.separator
-                + "src/main/resources/static/about/";
+                + "api/src/main/resources/static/about/";
         Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
         Files.write(imagePath, file.getBytes());
 
@@ -86,7 +86,7 @@ public class AboutController {
 
      @GetMapping("/image/mission/{id}")
     public ResponseEntity<byte[]> getMissionImage(@PathVariable("id") Integer id) throws java.io.IOException {
-        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "src/main/resources/static/about/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "api/src/main/resources/static/about";
         About about = aboutRepository.findByAboutId(id);
         String imageName = about.getImageUrlMission();
         byte[] image = new byte[0];
@@ -103,7 +103,7 @@ public class AboutController {
 
     @GetMapping("/image/vision/{id}")
     public ResponseEntity<byte[]> getVisionImage(@PathVariable("id") Integer id) throws java.io.IOException {
-        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "src/main/resources/static/about/";
+        String uploadDirectory = System.getProperty("user.dir") + File.separator +  "api/src/main/resources/static/about";
         About about = aboutRepository.findByAboutId(id);
         String imageName = about.getImageUrlVision();
         byte[] image = new byte[0];

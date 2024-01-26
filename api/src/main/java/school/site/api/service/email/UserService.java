@@ -2,11 +2,14 @@ package school.site.api.service.email;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
+import school.site.api.model.About;
 import school.site.api.model.ERole;
 import school.site.api.model.Role;
 import school.site.api.model.User;
@@ -20,13 +23,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final Logger LOGGER = LogManager.getLogger(UserService.class);
 
     @Autowired
     EmailSenderService emailSenderService;
@@ -38,23 +46,23 @@ public class UserService {
     PasswordEncoder encoder;
 
     public ResponseEntity<MessageResponse> addUser(MultipartFile file, String first_name, String last_name, String email, String mobile_number, Set<String> roles, String password) throws IOException {
+        String fileName = sanitizeFileName(file.getOriginalFilename());
         if(userRepository.existsByEmail(email)){
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use"));
         }
 
         if(!file.isEmpty()){
             String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/users/profiles/";
-            Path imagePath = Paths.get(uploadDirectory, file.getOriginalFilename());
+            Path imagePath = Paths.get(uploadDirectory, fileName);
             Files.write(imagePath, file.getBytes());
         }
 
         Set<String> strRoles = roles;
         Set<Role> userRoles = assignRoles(roles);
-
         String filePath;
 
         if(file.getOriginalFilename() != "" || file.getOriginalFilename() != null) {
-            filePath ="/" + file.getOriginalFilename();
+            filePath ="/" + fileName;
         } else {
             filePath = "/";
         }
@@ -76,7 +84,6 @@ public class UserService {
         userRepository.save(user);
         return ResponseEntity.ok(new MessageResponse("A user has been successfully added"));
     }
-
     private Set<Role> assignRoles(Set<String> strRoles){
         Set<Role> userRoles = new HashSet<>();
 
@@ -109,5 +116,38 @@ public class UserService {
     }
     public User findByEmail(String email) {
        return userRepository.findByEmail(email).get();
+    }
+    public byte[] getUserImage(Integer id) throws IOException, RuntimeException {
+        String uploadDirectory = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/users/profiles";
+
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            // Handle case where user is not found, perhaps return a default image or throw an exception
+            throw new RuntimeException("User not found for id: " + id);
+        }
+
+        User user = userOptional.get();
+        String imageName = user.getImage_url();
+        byte[] image = new byte[0];
+
+        try {
+            File file = new File(uploadDirectory, imageName);
+            if (file.exists()) {
+                image = Files.readAllBytes(file.toPath());
+            } else {
+                byte[] defaultImage = new byte[0];
+                String getDefaultImage = System.getProperty("user.dir") + File.separator + "api/src/main/resources/static/users/profiles/default.png";
+                File defaultFile = new File(getDefaultImage);
+                defaultImage = Files.readAllBytes(defaultFile.toPath());
+                return defaultImage;
+            }
+        } catch (IOException e) {
+            LOGGER.error("Error reading user image: {}", e.getMessage());
+            throw e;
+        }
+        return image;
+    }
+    private String sanitizeFileName(String fileName){
+        return fileName.replaceAll("[^a-zA-Z0-9-_\\.]", "_");
     }
 }
