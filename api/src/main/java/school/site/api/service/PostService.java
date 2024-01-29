@@ -8,9 +8,7 @@ import school.site.api.model.Post;
 import school.site.api.model.User;
 import school.site.api.repository.PostRepository;
 import school.site.api.repository.UserRepository;
-import school.site.api.service.email.UserService;
 
-import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;

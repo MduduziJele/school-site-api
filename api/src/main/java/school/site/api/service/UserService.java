@@ -1,16 +1,12 @@
-package school.site.api.service.email;
-
+package school.site.api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
-import school.site.api.model.About;
 import school.site.api.model.ERole;
 import school.site.api.model.Role;
 import school.site.api.model.User;
@@ -28,6 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import school.site.api.service.email.EmailSenderService;
 
 @Service
 public class UserService {
