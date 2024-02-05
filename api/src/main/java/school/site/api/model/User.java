@@ -35,6 +35,10 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ResetToken resetToken;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contact")
+    private Contact contact;
+
     public User() {
     }
 
