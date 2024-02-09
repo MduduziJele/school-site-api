@@ -32,7 +32,7 @@ public class GalleryImageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/galleryDelete/{id}")
     public ResponseEntity<Void> deleteGallery(@PathVariable Long id) {
         galleryService.deletePost(id);
         return new ResponseEntity<>(HttpStatus.OK);
